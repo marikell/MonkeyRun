@@ -26,6 +26,8 @@ public class Scene {
     
     private Queue<Element> elements;
     private int[][] scene;
+    private AssetManager assetManager;
+    private BulletAppState bulletAppState;
 
     public Queue<Element> getElements() {
         return elements;
@@ -36,26 +38,49 @@ public class Scene {
     }
     private Element floor;
             
-    public Scene(){
+    public Scene(AssetManager assetManager, BulletAppState bulletAppState){
         
        elements = new LinkedList<Element>();
        scene = new int[8][3];
+       this.assetManager = assetManager;
+       this.bulletAppState = bulletAppState;
     }  
     
             
-    public void createFloor(float width, float height, AssetManager assetManager, BulletAppState bulletAppState)
+    public void createFloor(float width, float height)
     {
         floor = new Element("floor",bulletAppState,assetManager, width, height, 0.1f, "Common/MatDefs/Light/Lighting.j3md", ColorRGBA.Orange, new Vector3f(0,0,0), new Vector3f(0,0,0));
-        floor.getBox().rotate(100f, 0, 0);
         elements.add(floor);
     }
 
-    public void create(){
+    
+    public void show(float width, float height){
         
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 3; j++) {
+                
+                if(scene[i][j] == 1){
+                    
+                Element element = new Element("wall"+i+j,bulletAppState,assetManager, width, height, 0.1f, "Common/MatDefs/Light/Lighting.j3md", ColorRGBA.Red, new Vector3f(-4+ 4*j,14-4*i,0), new Vector3f(0,0,0));
+                element.getBox().move(0,0,-1);                
+                elements.add(element); 
+                    
+                }
+                
+            }
+        }
+        
+       
+          /*element = new Element("wall2",bulletAppState,assetManager, width, height, 0.1f, "Common/MatDefs/Light/Lighting.j3md", ColorRGBA.Magenta, new Vector3f(0,10,0), new Vector3f(0,0,0));
+                element.getBox().move(0,0,-1);                
+                elements.add(element);
+                element = new Element("wall3",bulletAppState,assetManager, width, height, 0.1f, "Common/MatDefs/Light/Lighting.j3md", ColorRGBA.Blue, new Vector3f(4,0,0), new Vector3f(0,0,0));
+                element.getBox().move(0,0,-1);                
+                elements.add(element);*/
         
         
     }
-    
+        
     public void generate(){
         
         scene = new int[8][3];
@@ -97,7 +122,7 @@ public class Scene {
             for (int i = 0; i < row.length; i++) {
             row[i] = random.nextInt(2);
         }
-       }while(!verify(row, 1, 2));       
+       }while(!verify(row, 1, 1));       
 
         return row;
     }   

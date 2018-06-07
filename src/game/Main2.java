@@ -62,8 +62,9 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
                 initKeys();
 
         //Configurações da Câmera
-        cam.getLocation().z += 40f;
-        cam.getLocation().y += 2f;
+
+        cam.getLocation().z +=33f;
+        cam.getLocation().y+=2f;
         flyCam.setEnabled(false);
 
         //Inicialização do BulletAppState
@@ -100,8 +101,9 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
 
     }
 
-    public void initBulletAppState() {
-        bulletAppState = new BulletAppState();
+
+       public void initBulletAppState(){
+       bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
     }
 
@@ -117,6 +119,8 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
     public void simpleInitApp() {
 
         initGame();
+        rootNode.rotate(2.5f, 0, 0);
+
 
     }
 
@@ -159,13 +163,13 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
             if(name.equals("Left") && keyPressed){
                 Node player = (Node)rootNode.getChild("monkey");
                 if(player.getLocalTranslation().x > -1){
-                    player.move(-2, 0, 0);
+                    player.move(-3f, 0, 0);
                 }
             }
             if(name.equals("Right") && keyPressed){
                 Node player = (Node)rootNode.getChild("monkey");
                 if(player.getLocalTranslation().x < 1){
-                    player.move(2, 0, 0);
+                    player.move(3f, 0, 0);
                 }
             }            
         }

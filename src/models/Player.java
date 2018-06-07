@@ -28,9 +28,10 @@ public class Player implements AnimEventListener {
     
     public Player(AssetManager assetManager){
         player = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
-        player.setLocalScale(2f);
+        player.setLocalScale(4f);
+        player.setLocalTranslation(0, 12, -3);
         player.setName("monkey");
-        player.rotate(0, FastMath.PI, 0);
+        player.rotate(2, FastMath.PI, 0);
 
         control = player.getControl(AnimControl.class);
         control.addListener(this);
