@@ -51,7 +51,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
        
        public void initGame(){
         //Configurações da Câmera
-        cam.getLocation().z +=40f;
+        cam.getLocation().z +=25f;
         cam.getLocation().y+=2f;
         flyCam.setEnabled(false);
 
@@ -89,6 +89,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
         //Desenhando o player
         rootNode.attachChild(game.getPlayer().getNode());
         
+        
         }
        
        public void initBulletAppState(){
@@ -103,11 +104,15 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
         rootNode.addLight(light);
         return light;
     }
+     
+      
        
     @Override
     public void simpleInitApp() {
         
         initGame();
+        rootNode.rotate(2f, 0, 0);
+
 
     }
     

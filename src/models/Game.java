@@ -30,11 +30,13 @@ public class Game {
     }
     
    public void createScene(AssetManager assetManager, BulletAppState bulletAppState){
-       scene = new Scene();
+       scene = new Scene(assetManager,bulletAppState);
         //Geração de Cenário
         this.getScene().generate();
         //Criação do Chão
-        this.getScene().createFloor(6f, 15f, assetManager,bulletAppState);         
+        this.getScene().createFloor(6f, 15f);   
+        //Conversão da matriz em cenário
+        this.getScene().show(2f, 1.875f);
    }
    
    public void createPlayer(AssetManager assetManager, BulletAppState bulletAppState, Vector3f position, Vector3f rotation){
