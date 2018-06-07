@@ -40,7 +40,8 @@ public class Game {
    }
    
    public void createPlayer(AssetManager assetManager, BulletAppState bulletAppState, Vector3f position, Vector3f rotation){
-       player = new Player(position, rotation, bulletAppState, assetManager);
+       //player = new Player(position, rotation, bulletAppState, assetManager);
+       player = new Player(assetManager);
    }
    
 }
