@@ -56,7 +56,7 @@ public class Scene {
     
     public void show(float width, float height){
         
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 3; j++) {
                 
                 if(scene[i][j] == 1){
@@ -70,13 +70,6 @@ public class Scene {
             }
         }
         
-       
-          /*element = new Element("wall2",bulletAppState,assetManager, width, height, 0.1f, "Common/MatDefs/Light/Lighting.j3md", ColorRGBA.Magenta, new Vector3f(0,10,0), new Vector3f(0,0,0));
-                element.getBox().move(0,0,-1);                
-                elements.add(element);
-                element = new Element("wall3",bulletAppState,assetManager, width, height, 0.1f, "Common/MatDefs/Light/Lighting.j3md", ColorRGBA.Blue, new Vector3f(4,0,0), new Vector3f(0,0,0));
-                element.getBox().move(0,0,-1);                
-                elements.add(element);*/
         
         
     }
