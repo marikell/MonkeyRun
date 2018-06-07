@@ -5,6 +5,7 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
 import com.jme3.app.SimpleApplication;
+import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
@@ -21,12 +22,14 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import models.Player;
 
 public class Main3 extends SimpleApplication implements AnimEventListener, PhysicsCollisionListener {
 
     private AnimChannel channel;
     private AnimControl control;
-    private Node player;   
+    private Player player;
+    //private Node player;   
 
     public static void main(String[] args) {
         Main3 app = new Main3();
@@ -37,17 +40,22 @@ public class Main3 extends SimpleApplication implements AnimEventListener, Physi
     @Override
     public void simpleInitApp() {
         Vector3f camera = new Vector3f();
+        Vector3f posPlayer = new Vector3f();
+        BulletAppState bulletPlayer = new BulletAppState();
+        
         camera.x = 0;
         camera.y = 0;
         camera.z = 5;
-        Quaternion cameraRot = new Quaternion();
-        cameraRot.set(0, 1, 0, 0);
+        
         viewPort.setBackgroundColor(ColorRGBA.LightGray);
 
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(new Vector3f(-0.1f, -1f, -1).normalizeLocal());
         rootNode.addLight(dl);
-        player = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
+        
+        player = new Player(assetManager);
+        rootNode.attachChild(player.getNode());
+        /*player = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
         player.setLocalScale(2f);
         player.setName("monkey");
         player.rotate(0, FastMath.PI, 0);
@@ -57,12 +65,10 @@ public class Main3 extends SimpleApplication implements AnimEventListener, Physi
         control.addListener(this);
 
         channel = control.createChannel();
-        channel.setAnim("Run", 0.05f);
-
+        channel.setAnim("Run", 0.05f);*/
         initKeys();
         
-        cam.setLocation(camera);
-        //cam.setRotation(cameraRot);
+        cam.setLocation(camera);        
         flyCam.setDragToRotate(true);//nao movimenta a camera
     }
 
