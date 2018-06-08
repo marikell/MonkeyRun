@@ -10,8 +10,10 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.input.ChaseCamera;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 
 /**
@@ -25,11 +27,12 @@ public class Player implements AnimEventListener {
     private Node player;
     private AnimChannel channel;
     private AnimControl control;
+    private ChaseCamera chaseCamera;
     
-    public Player(AssetManager assetManager){
+    public Player(AssetManager assetManager,Camera cam){
         player = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
         player.setLocalScale(4f);
-        player.setLocalTranslation(0, 12, -3);
+        player.setLocalTranslation(0, 12, -0.5f);
         player.setName("monkey");
         player.rotate(2, FastMath.PI, 0);
 
@@ -38,6 +41,12 @@ public class Player implements AnimEventListener {
 
         channel = control.createChannel();
         channel.setAnim("Run", 0.05f);
+        
+        ChaseCamera camChase = new ChaseCamera(cam, player);
+        camChase.setDownRotateOnCloseViewOnly(true);
+
+
+        
     }
 
     /*public Player(Vector3f position, Vector3f rotation, BulletAppState bulletAppState, AssetManager assetManager) {

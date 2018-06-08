@@ -35,6 +35,7 @@ import models.Esfera;
 import models.Game;
 import models.Player;
 import models.RigidBodyBox;
+import models.Scene;
 
 /**
  *
@@ -44,6 +45,9 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
 
     private BulletAppState bulletAppState;
     private Game game;
+    
+    private int scenarioControl = 0;
+    private float scenarioTime = 0;
 
     private RigidBodyBox floorBox;
     private Element element;
@@ -72,10 +76,10 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
 
         //Instância de um jogo
         game = new Game();
-        game.createScene(assetManager, bulletAppState);
+        game.createScene(assetManager, bulletAppState, scenarioControl);
 
         //Instância do player
-        game.createPlayer(assetManager, bulletAppState, new Vector3f(0, 10, 0), new Vector3f(0, 0, 0));        
+        game.createPlayer(assetManager, bulletAppState, new Vector3f(0, 10, 0), new Vector3f(0, 0, 0), cam);        
 
         createLight(ColorRGBA.White);
         bulletAppState.setDebugEnabled(true);
@@ -86,8 +90,13 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
     }
 
     private void drawElements() {
-        LinkedList<Element> elements = (LinkedList<Element>) game.getScene().getElements();
-
+        
+        for (int j = 0; j < game.getScenes().size(); j++) {
+            
+            Scene scene = game.getScenes().get(j);
+            
+            LinkedList<Element> elements = (LinkedList<Element>) scene.getElements();
+        
         for (int i = 0; i < elements.size(); i++) {
 
             Spatial element = elements.get(i).getBox();
@@ -95,6 +104,8 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
             rootNode.attachChild(elements.get(i).getBox());
         }
         
+            
+        }
 
         //Desenhando o player        
         rootNode.attachChild(game.getPlayer().getNode());
@@ -119,15 +130,28 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
     public void simpleInitApp() {
 
         initGame();
-        rootNode.rotate(2.5f, 0, 0);
+        rootNode.rotate(1.8f, 1.55f, 0);
 
 
     }
 
     @Override
-    public void simpleUpdate(float tpf) {
-                
+    public void simpleUpdate(float tpf) {               
+
+        Spatial player = rootNode.getChild("monkey");
+        Spatial floor = game.getScenes().get(game.getScenes().size()-1).getFloor().getBox();
+        
+        if(player.getLocalTranslation().y>floor.getLocalTranslation().y+6.7f){
+        }
+        else{
+            scenarioControl++;
+            game.createScene(assetManager, bulletAppState, scenarioControl);
+            drawElements();
+        }       
+        
+        player.move(0,-3*tpf,0);           
     }
+   
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
@@ -163,13 +187,13 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
             if(name.equals("Left") && keyPressed){
                 Node player = (Node)rootNode.getChild("monkey");
                 if(player.getLocalTranslation().x > -1){
-                    player.move(-3f, 0, 0);
+                    player.move(-3.7f, 0, 0);
                 }
             }
             if(name.equals("Right") && keyPressed){
                 Node player = (Node)rootNode.getChild("monkey");
                 if(player.getLocalTranslation().x < 1){
-                    player.move(3f, 0, 0);
+                    player.move(3.6f, 0, 0);
                 }
             }            
         }

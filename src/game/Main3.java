@@ -53,7 +53,7 @@ public class Main3 extends SimpleApplication implements AnimEventListener, Physi
         dl.setDirection(new Vector3f(-0.1f, -1f, -1).normalizeLocal());
         rootNode.addLight(dl);
         
-        player = new Player(assetManager);
+        player = new Player(assetManager,cam);
         rootNode.attachChild(player.getNode());
         /*player = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
         player.setLocalScale(2f);
