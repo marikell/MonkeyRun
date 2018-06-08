@@ -28,6 +28,10 @@ public class Scene {
     
     private Queue<Element> elements;
     private int[][] scene;
+
+    public int[][] getScene() {
+        return scene;
+    }
     private AssetManager assetManager;
     private BulletAppState bulletAppState;
 
@@ -76,7 +80,6 @@ public class Scene {
         
     }
     
-    
         
     public void generate(){
         
@@ -84,7 +87,55 @@ public class Scene {
                 
         for(int i = 0; i<8;i++){
            scene[i] = rowGenerator();
-        }        
+        }
+        try{
+          validateGeneration();
+        }
+        catch(ArrayIndexOutOfBoundsException ex){
+            //Se der exceção, ele não fará nada.
+        }
+    }
+    
+    private void validateGeneration() throws ArrayIndexOutOfBoundsException{
+        
+        for (int i = 0; i < 8; i++) {
+            
+            for (int j = 0; j < 3; j++) {
+                
+              if(scene[i][j]==1){
+                    //Se a seu objeto for parede, e ter parede, removo.
+                    
+                    if(i !=0 && j!=0){
+                             
+                if(scene[i-1][j-1] == 1){
+                    scene[i-1][j-1] = 0;
+                } 
+                    }
+                    if(j!=0 && (i+1)<8){
+                         if(scene[i+1][j-1] == 1){
+                    scene[i+1][j-1] = 0;
+                }
+                
+                    }
+                    
+                    if(i!=0 && (j+1)<3){
+                       if(scene[i-1][j+1] == 1){
+                    scene[i-1][j+1] = 0;
+                } 
+                    }
+                               
+                if((i+1)<8 && (j+1)<3){
+                       if(scene[i+1][j+1] == 1){
+                    scene[i+1][j+1] = 0;
+                }        
+                }                
+                       
+      
+              }
+                
+            }
+        }
+        
     }
     
     private boolean verify(int[] numbers, int factor, int occurrences){
@@ -100,6 +151,8 @@ public class Scene {
         return (cont <= occurrences);
         
     }
+    
+    
     
     private void initializeRow(int[] row){
          for (int i = 0; i < row.length; i++) {

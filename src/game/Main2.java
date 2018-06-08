@@ -47,15 +47,8 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
     private Game game;
     
     private int scenarioControl = 0;
-    private float scenarioTime = 0;
-
-    private RigidBodyBox floorBox;
-    private Element element;
 
     private AnimChannel channel;
-    private AnimControl control;
-    private Node player;
-
     public static void main(String[] args) {
         Main2 app = new Main2();
         app.showSettings = false;
@@ -75,7 +68,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
         initBulletAppState();
 
         //Instância de um jogo
-        game = new Game();
+        game = new Game(4);
         game.createScene(assetManager, bulletAppState, scenarioControl);
 
         //Instância do player
@@ -149,7 +142,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
             drawElements();
         }       
         
-        player.move(0,-3*tpf,0);           
+        player.move(0,(-1)*game.getSpeed()*tpf,0);           
     }
    
 
