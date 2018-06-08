@@ -14,26 +14,23 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Sphere;
+import com.jme3.texture.Texture;
+import com.jme3.texture.Texture.WrapMode;
 import java.util.LinkedList;
 import models.Element;
-import models.Esfera;
 import models.Game;
-import models.Player;
 import models.RigidBodyBox;
 
 /**
@@ -58,33 +55,39 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
         app.start();
     }
 
-    public void initGame() {
-                initKeys();
-
+    public void initGame() { 
+        createBackground();        
+        initKeys();
         //Configurações da Câmera
-
-        cam.getLocation().z +=33f;
-        cam.getLocation().y+=2f;
+        cam.getLocation().z += 33f;
+        cam.getLocation().y += 2f;
         flyCam.setEnabled(false);
-
         //Inicialização do BulletAppState
         initBulletAppState();
-
-        //Instância de um jogo
-        game = new Game();
-        game.createScene(assetManager, bulletAppState);
-
-        //Instância do player
-        game.createPlayer(assetManager, bulletAppState, new Vector3f(0, 10, 0), new Vector3f(0, 0, 0));        
-
         createLight(ColorRGBA.White);
         bulletAppState.setDebugEnabled(true);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
-
-        drawElements();
-
+        //Instância de um jogo
+        game = new Game();
+        game.createInitialScreen(assetManager, guiNode, guiFont);
     }
 
+    public void createBackground(){
+        Box backMesh = new Box(35f, 35f, 1f);
+        Vector2f scale = new Vector2f(5,5);        
+        backMesh.scaleTextureCoordinates(scale);
+        Geometry backGeo = new Geometry("Box", backMesh);
+        Material backMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Texture backTex = assetManager.loadTexture("Textures/background.jpg");
+        backTex.setWrap(WrapMode.Repeat);
+        backMat.setTexture("ColorMap", backTex);
+        backGeo.setMaterial(backMat);
+        backGeo.rotate(0.6f, 0, 0);
+        backGeo.move(0, 0, 15);
+        System.out.println(backGeo.getLocalTranslation());
+        rootNode.attachChild(backGeo);
+    }
+    
     private void drawElements() {
         LinkedList<Element> elements = (LinkedList<Element>) game.getScene().getElements();
 
@@ -94,16 +97,14 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
 
             rootNode.attachChild(elements.get(i).getBox());
         }
-        
 
         //Desenhando o player        
         rootNode.attachChild(game.getPlayer().getNode());
 
     }
 
-
-       public void initBulletAppState(){
-       bulletAppState = new BulletAppState();
+    public void initBulletAppState() {
+        bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
     }
 
@@ -120,7 +121,6 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
 
         initGame();
         rootNode.rotate(2.5f, 0, 0);
-
 
     }
 
@@ -145,33 +145,30 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
         inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addListener(actionListener, "Space", "Left", "Right");
     }
-    
+
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
-            if(name.equals("Space")){
-                if (!channel.getAnimationName().equals("JumpStart")) {
-                    channel.setAnim("JumpStart", 3f);
-                    channel.setLoopMode(LoopMode.Loop);
-                }
+            if (name.equals("Space") && !game.getStatus()) {                
+                game.setStatus(true);
+                game.createScene(assetManager, bulletAppState);
+                guiNode.detachAllChildren();
+
+                //Instância do player
+                game.createPlayer(assetManager);
+                drawElements();
             }
-            if (name.equals("Space") && !keyPressed) {
-                if (!channel.getAnimationName().equals("Run")) {
-                    channel.setAnim("Run", 1f);
-                    channel.setLoopMode(LoopMode.Loop);
-                }
-            }
-            if(name.equals("Left") && keyPressed){
-                Node player = (Node)rootNode.getChild("monkey");
-                if(player.getLocalTranslation().x > -1){
+            if (name.equals("Left") && keyPressed) {
+                Node player = (Node) rootNode.getChild("monkey");
+                if (player.getLocalTranslation().x > -1) {
                     player.move(-3f, 0, 0);
                 }
             }
-            if(name.equals("Right") && keyPressed){
-                Node player = (Node)rootNode.getChild("monkey");
-                if(player.getLocalTranslation().x < 1){
+            if (name.equals("Right") && keyPressed) {
+                Node player = (Node) rootNode.getChild("monkey");
+                if (player.getLocalTranslation().x < 1) {
                     player.move(3f, 0, 0);
                 }
-            }            
+            }
         }
     };
 
