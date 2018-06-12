@@ -10,8 +10,12 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.control.BetterCharacterControl;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.input.ChaseCamera;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 
 /**
@@ -21,15 +25,17 @@ import com.jme3.scene.Node;
 public class Player implements AnimEventListener {
 
     private boolean IsAlive;
-    //private Jamie player;
+    private RigidBodyControl rigidbody;
+    private BetterCharacterControl physicsCharacter;
     private Node player;
     private AnimChannel channel;
     private AnimControl control;
+    private ChaseCamera chaseCamera;
     
-    public Player(AssetManager assetManager){
+    public Player(AssetManager assetManager,Camera cam, BulletAppState bulletAppState){
         player = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
         player.setLocalScale(4f);
-        player.setLocalTranslation(0, 12, -3);
+        player.setLocalTranslation(0, 12, -0.5f);
         player.setName("monkey");
         player.rotate(2, FastMath.PI, 0);
 
@@ -38,13 +44,30 @@ public class Player implements AnimEventListener {
 
         channel = control.createChannel();
         channel.setAnim("Run", 0.05f);
+        
+        ChaseCamera camChase = new ChaseCamera(cam, player);
+        camChase.setDownRotateOnCloseViewOnly(true);     
+        
+//        physicsCharacter = new BetterCharacterControl(1, 2.5f, 16f);
+//        player.addControl(physicsCharacter);
+//        bulletAppState.getPhysicsSpace().add(physicsCharacter);
     }
 
-    /*public Player(Vector3f position, Vector3f rotation, BulletAppState bulletAppState, AssetManager assetManager) {
+    public RigidBodyControl getRigidbody() {
+        return rigidbody;
+    }
 
-        player = new Jamie("player", position, rotation, bulletAppState, assetManager);
+    public void setRigidbody(RigidBodyControl rigidbody) {
+        this.rigidbody = rigidbody;
+    }
 
-    }*/
+    public BetterCharacterControl getPhysicsCharacter() {
+        return physicsCharacter;
+    }
+
+    public void setPhysicsCharacter(BetterCharacterControl physicsCharacter) {
+        this.physicsCharacter = physicsCharacter;
+    }
 
     public boolean isIsAlive() {
         return IsAlive;
@@ -54,10 +77,6 @@ public class Player implements AnimEventListener {
         this.IsAlive = IsAlive;
     }
 
-    /*public Jamie getNode() {
-        return player;
-    }*/
-    
     public Node getNode() {
         return player;
     }

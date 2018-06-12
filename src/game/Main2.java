@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import models.Element;
 import models.Game;
 import models.RigidBodyBox;
+import models.Scene;
 
 /**
  *
@@ -42,12 +43,9 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
     private BulletAppState bulletAppState;
     private Game game;
 
-    private RigidBodyBox floorBox;
-    private Element element;
+    private int scenarioControl = 0;
 
     private AnimChannel channel;
-    private AnimControl control;
-    private Node player;
 
     public static void main(String[] args) {
         Main2 app = new Main2();
@@ -55,9 +53,9 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
         app.start();
     }
 
-    public void initGame() { 
-        createBackground();        
-        initKeys();
+    public void initGame() {           
+        createBackground();
+        initKeys();        
         //Configurações da Câmera
         cam.getLocation().z += 33f;
         cam.getLocation().y += 2f;
@@ -67,35 +65,42 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
         createLight(ColorRGBA.White);
         bulletAppState.setDebugEnabled(true);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
+
         //Instância de um jogo
         game = new Game();
-        game.createInitialScreen(assetManager, guiNode, guiFont);
+        game.createInitialScreen(assetManager, guiNode, guiFont);        
     }
 
-    public void createBackground(){
+    public void createBackground() {
         Box backMesh = new Box(35f, 35f, 1f);
-        Vector2f scale = new Vector2f(5,5);        
+        Vector2f scale = new Vector2f(5, 5);
         backMesh.scaleTextureCoordinates(scale);
-        Geometry backGeo = new Geometry("Box", backMesh);
+        Geometry backGeo = new Geometry("Background", backMesh);
         Material backMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture backTex = assetManager.loadTexture("Textures/background.jpg");
         backTex.setWrap(WrapMode.Repeat);
         backMat.setTexture("ColorMap", backTex);
         backGeo.setMaterial(backMat);
-        backGeo.rotate(0.6f, 0, 0);
-        backGeo.move(0, 0, 15);
-        System.out.println(backGeo.getLocalTranslation());
+        backGeo.rotate(1f, 0.65f, 1.5f);
+        backGeo.move(0, 0, 0);
         rootNode.attachChild(backGeo);
     }
-    
+
     private void drawElements() {
-        LinkedList<Element> elements = (LinkedList<Element>) game.getScene().getElements();
 
-        for (int i = 0; i < elements.size(); i++) {
+        for (int j = 0; j < game.getScenes().size(); j++) {
 
-            Spatial element = elements.get(i).getBox();
+            Scene scene = game.getScenes().get(j);
 
-            rootNode.attachChild(elements.get(i).getBox());
+            LinkedList<Element> elements = (LinkedList<Element>) scene.getElements();
+
+            for (int i = 0; i < elements.size(); i++) {
+
+                Spatial element = elements.get(i).getBox();
+
+                rootNode.attachChild(elements.get(i).getBox());
+            }
+
         }
 
         //Desenhando o player        
@@ -120,12 +125,26 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
     public void simpleInitApp() {
 
         initGame();
-        rootNode.rotate(2.5f, 0, 0);
+        rootNode.rotate(1.8f, 1.55f, 0);        
 
     }
 
     @Override
     public void simpleUpdate(float tpf) {
+        if (game.getStatus()) {
+            //game.updateScore(guiNode);
+            Spatial player = game.getPlayer().getNode();
+            Spatial floor = game.getScenes().get(game.getScenes().size() - 1).getFloor().getBox();
+
+            if (player.getLocalTranslation().y > floor.getLocalTranslation().y + 6.7f) {
+            } else {
+                scenarioControl++;
+                game.createScene(assetManager, bulletAppState, scenarioControl);
+                drawElements();
+            }
+
+            player.move(0, (-1) * game.getSpeed() * tpf, 0);
+        }
 
     }
 
@@ -136,7 +155,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
 
     @Override
     public void collision(PhysicsCollisionEvent event) {
-
+        System.out.println("colisao");
     }
 
     private void initKeys() {
@@ -148,25 +167,29 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
 
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
-            if (name.equals("Space") && !game.getStatus()) {                
+            if (name.equals("Space") && !game.getStatus()) {
+                game.initGame(4);
                 game.setStatus(true);
-                game.createScene(assetManager, bulletAppState);
+                game.createScene(assetManager, bulletAppState, scenarioControl);
                 guiNode.detachAllChildren();
+                //game.createScore(assetManager, guiNode, guiFont);
 
                 //Instância do player
-                game.createPlayer(assetManager);
-                drawElements();
+                game.createPlayer(assetManager, cam, bulletAppState);
+                rootNode.detachChildNamed("Background");
             }
+
             if (name.equals("Left") && keyPressed) {
                 Node player = (Node) rootNode.getChild("monkey");
                 if (player.getLocalTranslation().x > -1) {
-                    player.move(-3f, 0, 0);
+                    player.move(-3.7f, 0, 0);
                 }
             }
+
             if (name.equals("Right") && keyPressed) {
                 Node player = (Node) rootNode.getChild("monkey");
                 if (player.getLocalTranslation().x < 1) {
-                    player.move(3f, 0, 0);
+                    player.move(3.6f, 0, 0);
                 }
             }
         }
