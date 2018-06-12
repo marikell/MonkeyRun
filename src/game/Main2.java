@@ -62,7 +62,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
         flyCam.setEnabled(false);
         //Inicialização do BulletAppState
         initBulletAppState();
-        createLight(ColorRGBA.White);
+        createLight(ColorRGBA.Black);
         bulletAppState.setDebugEnabled(true);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
 
@@ -132,7 +132,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
     @Override
     public void simpleUpdate(float tpf) {
         if (game.getStatus()) {
-            //game.updateScore(guiNode);
+            game.updateScore(guiNode);
             Spatial player = game.getPlayer().getNode();
             Spatial floor = game.getScenes().get(game.getScenes().size() - 1).getFloor().getBox();
 
@@ -172,7 +172,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
                 game.setStatus(true);
                 game.createScene(assetManager, bulletAppState, scenarioControl);
                 guiNode.detachAllChildren();
-                //game.createScore(assetManager, guiNode, guiFont);
+                game.createScore(assetManager, guiNode, guiFont);
 
                 //Instância do player
                 game.createPlayer(assetManager, cam, bulletAppState);

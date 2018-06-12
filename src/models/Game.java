@@ -61,13 +61,13 @@ public class Game {
 
     public void createInitialScreen(AssetManager assetManager, Node guiNode, BitmapFont guiFont) {
         guiNode.detachAllChildren();
-        guiFont = assetManager.loadFont("Interface/Fonts/ShowcardGothic.fnt");
+        guiFont = assetManager.loadFont("Interface/Fonts/ComicSansMS.fnt");
 
         BitmapText title = new BitmapText(guiFont, false);
-        title.setSize(30);
+        title.setSize(40);
         title.setColor(ColorRGBA.Yellow);
         title.setText("MONKEY RUN");
-        title.setLocalTranslation(225, 300, 0);
+        title.setLocalTranslation(190, 300, 0);
 
         BitmapText description = new BitmapText(guiFont, false);
         description.setSize(30);
@@ -109,6 +109,7 @@ public class Game {
             speed = speed + 0.5f;
             //Quando altera a velocidade, o nível também.
             level = level + 1;
+            this.score++;
         //}
 
         /*//Criação do Chão
@@ -127,28 +128,27 @@ public class Game {
 
     public void createScore(AssetManager assetManager, Node guiNode, BitmapFont guiFont) {
         guiNode.detachAllChildren();
-        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-
+        guiFont = assetManager.loadFont("Interface/Fonts/ComicSansMS.fnt");
+        
         BitmapText scoreText = new BitmapText(guiFont, false);
-        scoreText.setSize(20);
-        scoreText.setColor(ColorRGBA.Black);
+        scoreText.setSize(25);
+        scoreText.setColor(ColorRGBA.White);
         scoreText.setText("Score: ");
-        scoreText.setLocalTranslation(0, 450, 0);
+        scoreText.setLocalTranslation(10, 460, 0);
         scoreText.setName("scoreText");
         guiNode.attachChild(scoreText);
 
         BitmapText scoreValue = new BitmapText(guiFont, false);
-        scoreValue.setSize(20);
-        scoreValue.setColor(ColorRGBA.Black);
+        scoreValue.setSize(25);
+        scoreValue.setColor(ColorRGBA.White);
         scoreValue.setText("" + this.score);
-        scoreValue.setLocalTranslation(30, 450, 0);
+        scoreValue.setLocalTranslation(75, 460, 0);
         scoreValue.setName("scoreValue");
         guiNode.attachChild(scoreValue);
     }
 
-    public void updateScore(Node guiNode) {
-        this.score++;
+    public void updateScore(Node guiNode) {        
         BitmapText score = (BitmapText) guiNode.getChild("scoreValue");
-        score.setText("" + this.score);
+        score.setText(" " + this.score);
     }
 }
