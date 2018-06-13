@@ -33,6 +33,7 @@ import com.jme3.texture.Texture.WrapMode;
 import java.util.LinkedList;
 import models.Element;
 import models.Game;
+import models.Jamie;
 import models.RigidBodyBox;
 import models.Scene;
 
@@ -45,6 +46,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
     private BulletAppState bulletAppState;
     private Game game;
     private int scenarioControl = 0;
+    private Jamie player;
     private AnimChannel channel;
 
     public static void main(String[] args) {
@@ -99,23 +101,15 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
             for (int i = 0; i < elements.size(); i++) {
 
                 Spatial element = elements.get(i).getBox();
-
                 rootNode.attachChild(elements.get(i).getBox());
                 RigidBodyControl rigidBodyControl = new RigidBodyControl(0);
                 elements.get(i).getBox().addControl(rigidBodyControl);
                 bulletAppState.getPhysicsSpace().add(rigidBodyControl);
             }
-
-        }
-
+        }     
         //Desenhando o player        
         rootNode.attachChild(game.getPlayer());
-//        rootNode.attachChild(game.getPlayer().getNode());
-        BetterCharacterControl physicsCharacter = new BetterCharacterControl(1, 2.5f, 16f);
-        game.getPlayer().setPhysicsCharacter(physicsCharacter);
-        game.getPlayer().addControl(physicsCharacter);
-//        game.getPlayer().getNode().addControl(physicsCharacter);
-        bulletAppState.getPhysicsSpace().add(physicsCharacter);
+      
     }
 
     public void initBulletAppState() {
@@ -153,7 +147,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
                 drawElements();
             }
 
-            player.move(0, (-1) * game.getSpeed() * tpf, 0);
+            rootNode.getChild("monkey").move(0, (-1) * game.getSpeed() * tpf, 0);
         }
 
     }

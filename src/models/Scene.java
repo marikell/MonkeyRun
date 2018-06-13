@@ -62,7 +62,7 @@ public class Scene {
     public void createFloor(float width, float height, Vector3f position)
     {
         floor = new Element("floor",bulletAppState,assetManager, width, height, 0.1f, "Common/MatDefs/Light/Lighting.j3md", ColorRGBA.Orange, position, new Vector3f(0,0,0), "Textures/floor.jpg");
-//        floor.initRigidBody(0);
+        //floor.initRigidBody(0);
         elements.add(floor);                
     }
 

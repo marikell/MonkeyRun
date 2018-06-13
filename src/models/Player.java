@@ -22,67 +22,41 @@ import com.jme3.scene.control.CameraControl;
 
 /**
  *
- * @author Marianne
+ * @author Marianne 
  */
 public class Player extends Node implements AnimEventListener {
 
     private boolean IsAlive;
     private RigidBodyControl rigidbody;
     private BetterCharacterControl physicsCharacter;
-//    private Node player;
     private AnimChannel channel;
     private AnimControl control;
     private ChaseCamera chaseCamera;
     
     public Player(AssetManager assetManager,Camera cam, BulletAppState bulletAppState){
-        super("monkey");
-        Node p = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
-        p.setLocalTranslation(0, 12, -0.5f);
-//        assetManager.loadModel("Models/Jaime/Jaime.j3o");
-        setLocalScale(4f);
-//        setLocalTranslation(0, 12, -0.5f);
-        setName("monkey");
-        rotate(2, FastMath.PI, 0);
-        attachChild(p);
+        super("monkey");          
+        Node oto = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
+        oto.rotate(0f,(float) -Math.PI/2, 0);
+        oto.setLocalTranslation(0, 0, 0);
+        scale(3f);
+        setLocalTranslation(0, 2, 0);
+        attachChild(oto);
         
-        physicsCharacter = new BetterCharacterControl(1, 2.5f, 16f);
+        
+        physicsCharacter = new BetterCharacterControl(1, 3f, 16f);
         addControl(physicsCharacter);
         
         bulletAppState.getPhysicsSpace().add(physicsCharacter);
-                             
-        control = p.getControl(AnimControl.class);
+        control = oto.getControl(AnimControl.class);
 //        control.addListener(this);
 
         channel = control.createChannel();
         channel.setAnim("Run", 0.05f);          
-                ChaseCamera camChase = new ChaseCamera(cam, this);
+        ChaseCamera camChase = new ChaseCamera(cam, this);
         camChase.setDownRotateOnCloseViewOnly(true); 
         
-//        CameraNode camNode = new CameraNode("CamNode", cam);
-//        camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
-//        camNode.setLocalTranslation(new Vector3f(0, 20,-30));
-//        camNode.lookAt(this.getLocalTranslation(), Vector3f.UNIT_Y);
-//        this.attachChild(camNode);
-
-//        player = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
-//        player.setLocalScale(4f);
-//        player.setLocalTranslation(0, 12, -0.5f);
-//        player.setName("monkey");
-//        player.rotate(2, FastMath.PI, 0);
-//
-//        control = player.getControl(AnimControl.class);
-//        control.addListener(this);
-//
-//        channel = control.createChannel();
-//        channel.setAnim("Run", 0.05f);
-//        
-//        ChaseCamera camChase = new ChaseCamera(cam, player);
-//        camChase.setDownRotateOnCloseViewOnly(true);     
-        
-//        physicsCharacter = new BetterCharacterControl(1, 2.5f, 16f);
-//        player.addControl(physicsCharacter);
-//        bulletAppState.getPhysicsSpace().add(physicsCharacter);
     }
+    
 
     public RigidBodyControl getRigidbody() {
         return rigidbody;
