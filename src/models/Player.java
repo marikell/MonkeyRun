@@ -32,22 +32,23 @@ public class Player extends Node implements AnimEventListener {
     private AnimChannel channel;
     private AnimControl control;
     private ChaseCamera chaseCamera;
-    
+
+       
     public Player(AssetManager assetManager,Camera cam, BulletAppState bulletAppState){
         super("monkey");          
-        Node oto = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
-        oto.rotate(0f,(float) -Math.PI/2, 0);
-        oto.setLocalTranslation(0, 0, 0);
+        Node player = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
+        player.rotate(0f,(float) -Math.PI/2, 0);
+        player.setLocalTranslation(0, 0, 0);
         scale(3f);
-        setLocalTranslation(0, 2, 0);
-        attachChild(oto);
+        setLocalTranslation(-3, 2,0);
+        attachChild(player);
         
         
         physicsCharacter = new BetterCharacterControl(1, 3f, 16f);
         addControl(physicsCharacter);
         
         bulletAppState.getPhysicsSpace().add(physicsCharacter);
-        control = oto.getControl(AnimControl.class);
+        control = player.getControl(AnimControl.class);
 //        control.addListener(this);
 
         channel = control.createChannel();

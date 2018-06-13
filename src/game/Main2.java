@@ -147,7 +147,7 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
                 drawElements();
             }
 
-            rootNode.getChild("monkey").move(0, (-1) * game.getSpeed() * tpf, 0);
+            (player).move(0, (-1) * game.getSpeed() * tpf, 0);
         }
 
     }
