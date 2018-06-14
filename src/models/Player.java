@@ -37,13 +37,14 @@ public class Player extends Node implements AnimEventListener {
         super("monkey");          
         Node oto = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
         oto.rotate(0f,(float) -Math.PI/2, 0);
+        oto.setName("player");
         oto.setLocalTranslation(0, 0, 0);
         scale(3f);
         setLocalTranslation(0, 2, 0);
         attachChild(oto);
         
         
-        physicsCharacter = new BetterCharacterControl(1, 3f, 16f);
+        physicsCharacter = new BetterCharacterControl(1f, 2.5f, 16f);
         addControl(physicsCharacter);
         
         bulletAppState.getPhysicsSpace().add(physicsCharacter);

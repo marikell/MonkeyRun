@@ -12,6 +12,7 @@ import com.jme3.animation.LoopMode;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.BetterCharacterControl;
@@ -27,6 +28,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
@@ -140,14 +142,15 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
 //            Spatial player = game.getPlayer().getNode();
             Spatial floor = game.getScenes().get(game.getScenes().size() - 1).getFloor().getBox();
 
-            if (player.getLocalTranslation().y > floor.getLocalTranslation().y + 6.7f) {
+            if (game.getPlayer().getChild("player").getLocalTranslation().x > floor.getLocalTranslation().y + 6.7f) {
             } else {
                 scenarioControl++;
                 game.createScene(assetManager, bulletAppState, scenarioControl);
                 drawElements();
             }
 
-            rootNode.getChild("monkey").move(0, (-1) * game.getSpeed() * tpf, 0);
+            rootNode.getChild("monkey").move((-1) * game.getSpeed() * tpf, 0, 0);
+//            game.getPlayer().getChild("player").move((-1) * game.getSpeed() * tpf, 0, 0);
         }
 
     }
@@ -159,7 +162,19 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
 
     @Override
     public void collision(PhysicsCollisionEvent event) {
-        System.out.println("colisao");
+         if(event.getNodeA().getName().equals("monkey") || 
+           event.getNodeB().getName().equals("monkey")){
+
+            if(event.getNodeA().getName().contains("wall")){
+                game.setStatus(false);
+                System.out.println("colisao");                  
+            }
+            else
+            if(event.getNodeB().getName().contains("wall")){
+                game.setStatus(false);
+            }
+            
+        }
     }
 
     private void initKeys() {
@@ -184,16 +199,21 @@ public class Main2 extends SimpleApplication implements ActionListener, PhysicsC
             }
 
             if (name.equals("Left") && keyPressed) {
-                Node player = (Node) rootNode.getChild("monkey");
-                if (player.getLocalTranslation().x > -2) {
-                    player.move(-3.7f, 0, 0);
-                }
+                System.out.println("left");
+                Node player = (Node) rootNode.getChild("monkey");                                
+                
+                if (game.getPlayer().getChild("player").getLocalTranslation().z > -2) {
+//                    game.getPlayer().move(5, 5, 0); 
+                    game.getPlayer().getChild("player").move(0, 0, 1);
+                }                
+
             }
 
             if (name.equals("Right") && keyPressed) {
                 Node player = (Node) rootNode.getChild("monkey");
-                if (player.getLocalTranslation().x < 2) {
-                    player.move(3.7f, 0, 0);
+                if (game.getPlayer().getChild("player").getLocalTranslation().z < 2) {
+//                    player.move(3.7f, 0, 0);
+                    game.getPlayer().getChild("player").move(0, 0, -1);
                 }
             }
         }
